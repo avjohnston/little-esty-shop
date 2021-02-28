@@ -1,7 +1,7 @@
 <h1>Admin Invoices Index</h1>
 
 <section id='all-invoices'>
-<%= form_tag "/admin/invoices", method: :put do  %>
+<%= form_tag "/admin/invoices/update_all", method: :put do  %>
 <%= submit_tag "Update Invoices" %>
   <% @invoices.each do |invoice| %>
     <section id='invoice-<%= invoice.id %>'>
