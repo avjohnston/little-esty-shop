@@ -6,26 +6,33 @@ RSpec.describe 'Admin invoices index spec' do
   end
 
   describe 'as an admin' do
-    it 'shows id# of each invoice in the system' do
+    it 'shows id# of each invoice in the system with link' do
       visit admin_invoices_path
 
       within('#all-invoices') do
-        expect(page).to have_content(@invoice1.id)
-        expect(page).to have_content(@invoice2.id)
-        expect(page).to have_content(@invoice3.id)
+        within("#invoice-#{@invoice1.id}") do
+          expect(page).to have_content(@invoice1.id)
+          expect(page).to have_link("#{@invoice1.id}")
+        end
+        within("#invoice-#{@invoice2.id}") do
+          expect(page).to have_content(@invoice2.id)
+          expect(page).to have_link("#{@invoice2.id}")
+        end
+        within("#invoice-#{@invoice3.id}") do
+          expect(page).to have_content(@invoice3.id)
+          expect(page).to have_link("#{@invoice3.id}")
+        end
       end
     end
 
-    it 'ids of invoices are links to their show page' do
+    it 'shows the status of each invoice' do
       visit admin_invoices_path
 
       within('#all-invoices') do
-        expect(page).to have_link("#{@invoice1.id}")
-        expect(page).to have_link("#{@invoice2.id}")
-        expect(page).to have_link("#{@invoice3.id}")
+        within("#invoice-#{@invoice1.id}") do
 
-        first(:link, "#{@invoice1.id}").click
-        expect(current_path).to eq admin_invoice_path(@invoice1)
+        expect(page).to have_content(@invoice1.status_view_format)
+        end
       end
     end
   end
