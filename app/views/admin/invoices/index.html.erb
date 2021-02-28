@@ -1,10 +1,17 @@
 <h1>Admin Invoices Index</h1>
 
 <section id='all-invoices'>
+<%= form_tag "/admin/invoices", method: :put do  %>
+<%= submit_tag "Update Invoices" %>
   <% @invoices.each do |invoice| %>
     <section id='invoice-<%= invoice.id %>'>
       <%= link_to(invoice.id, admin_invoice_path(invoice.id)) %> <%= invoice.status_view_format %>
+      <br>
+      <%= fields_for "invoices[]", invoice do |f| %>
+      <%= f.label :status %>
+      <%= f.select :status, Invoice.statuses.keys %>
+      <% end %>
     </section>
-    <br>
   <% end %>
+<% end %>
 </section>
