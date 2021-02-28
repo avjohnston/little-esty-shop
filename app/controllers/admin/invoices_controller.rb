@@ -8,4 +8,9 @@ class Admin::InvoicesController < ApplicationController
     @customer = @invoice.customer
     @items = @invoice.items
   end
+
+  def update
+    Invoice.update(params[:invoices].keys, params[:invoices].values)
+    redirect_to admin_invoices_path
+  end
 end
