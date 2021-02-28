@@ -12,4 +12,6 @@ Rails.application.routes.draw do
     resources :merchants
     resources :invoices
   end
+
+  post '/admin/invoices', to: 'admin/invoices#update'
 end
