@@ -35,5 +35,30 @@ RSpec.describe 'Admin invoices index spec' do
         end
       end
     end
+    it 'can select new statuses and update multiple invoices' do
+      visit admin_invoices_path
+
+      within('#all-invoices') do
+        within("#invoice-#{@invoice1.id}") do
+          select 'cancelled', from: 'Status'
+        end
+        within("#invoice-#{@invoice2.id}") do
+          select 'cancelled', from: 'Status'
+        end
+        within("#invoice-#{@invoice3.id}") do
+          select 'cancelled', from: 'Status'
+        end
+        click_on("Update Invoices")
+        within("#invoice-#{@invoice1.id}") do
+          expect(page).to have_content("Cancelled")
+        end
+        within("#invoice-#{@invoice2.id}") do
+          expect(page).to have_content("Cancelled")
+        end
+        within("#invoice-#{@invoice3.id}") do
+          expect(page).to have_content("Cancelled")
+        end
+      end
+    end
   end
 end
