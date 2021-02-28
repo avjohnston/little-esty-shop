@@ -59,6 +59,9 @@ RSpec.describe 'Admin invoices index spec' do
           expect(page).to have_content("Cancelled")
         end
       end
+      expect(@invoice1.status).to eq(:cancelled.to_s)
+      expect(@invoice2.status).to eq(:cancelled.to_s)
+      expect(@invoice3.status).to eq(:cancelled.to_s)
     end
   end
 end
