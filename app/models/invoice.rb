@@ -7,7 +7,9 @@ class Invoice < ApplicationRecord
   enum status: [:cancelled, :completed, :in_progress]
 
   def status_view_format
-    status.titleize
+    if status != nil
+      status.titleize
+    end 
   end
 
   def created_at_view_format
