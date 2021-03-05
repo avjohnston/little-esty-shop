@@ -4,6 +4,8 @@
   <%= link_to 'My Invoices', merchant_invoices_path(@merchant) %>
 </nav>
 
+<%= link_to "My Discounts", merchant_discounts_path(@merchant) %>
+
 <h2>Favorite Customers</h2>
 <ol>
   <% @top_five_customers.each do |customer| %>

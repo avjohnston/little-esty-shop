@@ -1,6 +1,3 @@
-# require 'faraday'
-# require 'pry'
-# require 'json'
 require 'repo'
 require 'contributor'
 require 'pull'
