@@ -5,11 +5,14 @@ RSpec.describe 'As a merchant' do
     @merchant_1 = create(:merchant)
     @merchant_2 = create(:merchant)
 
+    @discount = @merchant_1.discounts.create!(percent: 0.1, threshold: 2)
+    @discount2 = @merchant_2.discounts.create!(percent: 0.1, threshold: 2)
+
     @customer_1 = create(:customer)
     @customer_2 = create(:customer)
 
-    @item_1 = create(:item, merchant_id: @merchant_1.id, unit_price: 1.00)
-    @item_2 = create(:item, merchant_id: @merchant_2.id, unit_price: 1.00)
+    @item_1 = create(:item, name: "Aaa", merchant_id: @merchant_1.id, unit_price: 1.00)
+    @item_2 = create(:item, name: "Bbb", merchant_id: @merchant_2.id, unit_price: 1.00)
 
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
@@ -91,6 +94,46 @@ RSpec.describe 'As a merchant' do
 
       within "#invoice-item-#{@item_1.id}" do
         expect(page).to have_select('status', selected: 'pending')
+      end
+    end
+
+    describe 'merchant invoice show has discount information' do
+      it 'show page has the total revenue after discount display' do
+        visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+        expected = "Total Revenue After Discounts: $#{'%.2f' % @invoice_1.discount_revenue}"
+
+        expect(page).to have_content(expected)
+      end
+
+      it 'has a discounted amount for each item with a discount' do
+        visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+        within "#invoice-item-#{@item_1.id}" do
+          expected = "Discount: $#{'%.2f' % @invoice_1.discount_amount(@invoice_item_1.id)}"
+
+          expect(page).to have_content(expected)
+        end
+
+        within "#invoice-item-#{@item_2.id}" do
+          expected = "Discount: $#{'%.2f' % @invoice_1.discount_amount(@invoice_item_3.id)}"
+
+          expect(page).to have_content(expected)
+        end
+      end
+
+      it 'merchant invoice show has link to discount for each discounted item' do
+        visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+        within "#invoice-item-#{@item_1.id}" do
+          expect(page).to have_link("Discount ##{@discount.id}")
+        end
+
+        visit merchant_invoice_path(@merchant_2, @invoice_2)
+
+        within "#invoice-item-#{@item_2.id}" do
+          expect(page).to have_link("Discount ##{@discount2.id}")
+        end
       end
     end
   end

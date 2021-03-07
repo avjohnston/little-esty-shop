@@ -22,10 +22,12 @@
 <h3>Items:</h3>
 <section class='admin_invoice' id='ii_info'>
   <% @items.each do |item| %>
-    <h4><%= item.name %></h4>
-    <p>Quantity: <%= InvoiceItem.search_for_quantity(@invoice.id, item.id) %></p>
-    <p>Price: <%= number_to_currency(item.unit_price) %></p>
-    <p>Discount: <%= number_to_currency(@invoice.discount_amount(item.invoice_item(@invoice.id))) %></p>
-    <p>Status: <%= item.status.capitalize %></p>
+    <section id="ii-<%= item.invoice_item(@invoice.id) %>">
+      <h4><%= item.name %></h4>
+      <p>Quantity: <%= InvoiceItem.search_for_quantity(@invoice.id, item.id) %></p>
+      <p>Price: <%= number_to_currency(item.unit_price) %></p>
+      <p>Discount: <%= number_to_currency(@invoice.discount_amount(item.invoice_item(@invoice.id))) %></p>
+      <p>Status: <%= item.status.capitalize %></p>
+    </section>
   <% end %>
 </section>

@@ -49,6 +49,7 @@ RSpec.describe 'Admin invoices show page' do
         end
       end
     end
+
     describe "you can update an invoice status" do
       it 'has the invoice status as a select field with the current invoice selected' do
         visit admin_invoice_path(@invoice_2)
@@ -58,6 +59,7 @@ RSpec.describe 'Admin invoices show page' do
           expect(page).to have_content(@invoice_2.status)
         end
       end
+
       it 'can pick a new status for the Invoice and see it updated on the Admin Invoice Show Page' do
         visit admin_invoice_path(@invoice_2)
 
@@ -82,12 +84,39 @@ RSpec.describe 'Admin invoices show page' do
     end
   end
 
+  describe 'admin invoice show has discount information' do
+    it 'show page has the total revenue after discount display' do
+      visit admin_invoice_path(@invoice_1)
+      expected = "Total Revenue After Discounts: $#{'%.2f' % @invoice_1.discount_revenue}"
+
+      expect(page).to have_content(expected)
+    end
+
+    it 'has a discounted amount for each item with a discount' do
+      visit admin_invoice_path(@invoice_1)
+
+      within "#ii-#{@invoice_item_1.id}" do
+        expected = "Discount: $#{'%.2f' % @invoice_1.discount_amount(@invoice_item_1.id)}"
+
+        expect(page).to have_content(expected)
+      end
+
+      within "#ii-#{@invoice_item_2.id}" do
+        expected = "Discount: $#{'%.2f' % @invoice_1.discount_amount(@invoice_item_2.id)}"
+
+        expect(page).to have_content(expected)
+      end
+    end
+  end
+
   def setup
     @customer_1 = create(:customer)
+    @merchant = create(:merchant)
+    @discount_1 = @merchant.discounts.create!(percent: 0.1, threshold: 2)
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
-    @item_1 = create(:item)
-    @item_2 = create(:item)
-    @item_3 = create(:item)
+    @item_1 = create(:item, merchant_id: @merchant.id)
+    @item_2 = create(:item, merchant_id: @merchant.id)
+    @item_3 = create(:item, merchant_id: @merchant.id)
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
     @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)

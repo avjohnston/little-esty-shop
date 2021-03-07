@@ -2,13 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'merchant discounts index page', type: :feature do
   before :each do
-    @merchant = create(:merchant)
-    @discount_1 = @merchant.discounts.create!(percent: 0.20, threshold: 10, merchant_id: @merchant.id)
-    @discount_2 = @merchant.discounts.create!(percent: 0.10, threshold: 15, merchant_id: @merchant.id)
-    @discount_3 = @merchant.discounts.create!(percent: 0.15, threshold: 12, merchant_id: @merchant.id)
-    # @holiday_1 = HolidayService.holiday_objects[0]
-    # @holiday_2 = HolidayService.holiday_objects[1]
-    # @holiday_3 = HolidayService.holiday_objects[2]
+    set_up
   end
 
   it 'merchant dashboard has a link to merchant discount index' do
@@ -94,5 +88,43 @@ RSpec.describe 'merchant discounts index page', type: :feature do
     expect(current_path).to eq(merchant_discounts_path(@merchant))
 
     expect(page).to_not have_content("ID: #{@discount_1.id}")
+  end
+
+  it 'a merchant cant delete a discount if there are pending invoice items on it ' do
+    visit merchant_discounts_path(@merchant)
+
+    within "#discount-#{@discount_2.id}" do
+      expect(page).to_not have_button("Delete Discount")
+    end
+
+    within "#discount-#{@discount_1.id}" do
+      expect(page).to have_button("Delete Discount")
+    end
+
+    within "#discount-#{@discount_3.id}" do
+      expect(page).to have_button("Delete Discount")
+    end
+  end
+
+  def set_up
+    @merchant = create(:merchant)
+    @discount_1 = @merchant.discounts.create!(percent: 0.20, threshold: 10)
+    @discount_2 = @merchant.discounts.create!(percent: 0.10, threshold: 2)
+    @discount_3 = @merchant.discounts.create!(percent: 0.15, threshold: 12)
+
+    @customer_1 = create(:customer)
+    @item_1 = create(:item, merchant_id: @merchant.id)
+    @item_2 = create(:item, merchant_id: @merchant.id)
+    @item_3 = create(:item, merchant_id: @merchant.id)
+
+    @invoice_1 = create(:invoice, customer_id: @customer_1.id)
+    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00, status: :pending)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00, status: :shipped)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00, status: :shipped)
+
+    @invoice_2 = create(:invoice, status: :in_progress)
+    @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00, status: :shipped)
+    @invoice_item_5 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00, status: :shipped)
+    @invoice_item_6 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00, status: :shipped)
   end
 end

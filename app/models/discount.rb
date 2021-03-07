@@ -12,6 +12,6 @@ class Discount < ApplicationRecord
   end
 
   def no_invoice_items_pending?
-    invoice_items.where(status: :pending).empty?
+    invoice_items.where(status: :pending).where('quantity >= ?', self.threshold).empty?
   end
 end
