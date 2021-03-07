@@ -2,6 +2,7 @@ class Item < ApplicationRecord
   has_many :invoice_items
   has_many :invoices, through: :invoice_items
   belongs_to :merchant
+  has_many :discounts, through: :merchant
 
   validates :name, presence: true, length: { minimum: 3 }
   validates :description, presence: true, length: { minimum: 15, maximum: 500 }
@@ -40,5 +41,9 @@ class Item < ApplicationRecord
     .group(:id)
     .order('total_revenue desc')
     .limit(5)
+  end
+
+  def invoice_item(invoice_id)
+    InvoiceItem.find_by(item_id: self.id, invoice_id: invoice_id).id
   end
 end

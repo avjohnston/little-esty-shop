@@ -1,6 +1,7 @@
 <h1><%= @merchant.name %>'s Discount #<%= @discount.id %></h1>
 <h2>Discount Percentage: <%= @discount.percent * 100 %>%</h2>
 <h2>Item Quantity Threshold: <%= @discount.threshold %> Items</h2>
-<h2>Item Status: <%= @discount.status.capitalize %> </h2>
 
-<%= button_to "Edit Discount", edit_merchant_discount_path(@merchant, @discount), method: :get %>
+<% if @discount.no_invoice_items_pending? %>
+  <%= button_to "Edit Discount", edit_merchant_discount_path(@merchant, @discount), method: :get %>
+<% end %>

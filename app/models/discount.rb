@@ -1,11 +1,17 @@
 class Discount < ApplicationRecord
   belongs_to :merchant
+  has_many :items, through: :merchant
+  has_many :invoice_items, through: :items
   validates_presence_of(:percent, :threshold)
   after_initialize :default, unless: :persisted?
 
   enum status: [:inactive, :active]
-  
+
   def default
     self.status = 0
+  end
+
+  def no_invoice_items_pending?
+    invoice_items.where(status: :pending).empty?
   end
 end

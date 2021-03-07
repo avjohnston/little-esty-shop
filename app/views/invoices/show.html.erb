@@ -1,7 +1,8 @@
 <h1>Invoice #<%= @invoice.id %></h1>
 <h3>Status: <%= @invoice.status %></h3>
 <h3>Created on: <%= @invoice.created_at_view_format %></h3>
-<h3>Total Revenue: $<%= '%.2f' % @invoice.total_revenue %></h3>
+<h3>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %></h3>
+<h3>Total Revenue After Discounts: <%= number_to_currency(@invoice.discount_revenue) %></h3>
 
 <h2>Customer:</h2>
 <p><%= @invoice.customer_full_name %></p>
@@ -11,7 +12,11 @@
     <section id="invoice-item-<%= invoice_item.item.id %>">
       <p>Name: <%= invoice_item.item_name %></p>
       <p>Quantity: <%= invoice_item.quantity %></p>
-      <p>Sold For: $<%= '%.2f' % invoice_item.unit_price %></p>
+      <p>Sold For: <%= number_to_currency(invoice_item.unit_price) %></p>
+      <p>Discount: <%= number_to_currency(@invoice.discount_amount(invoice_item.id)) %></p>
+      <% if @invoice.discount_amount(invoice_item.id) != 0 %>
+        <%= link_to "Discount ##{@invoice.discount_id(invoice_item.id)}", merchant_discount_path(@merchant, @invoice.discount_id(invoice_item.id)) %>
+      <% end %>
       <p>Status: <%= invoice_item.status_view_format %></p>
 
       <%= form_with url: merchant_invoice_item_path(@merchant, invoice_item), method: :patch, params: { status: :status }, local: true do |f|%>
