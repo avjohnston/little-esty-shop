@@ -39,9 +39,9 @@ RSpec.describe 'Admin invoices show page' do
           expect(page).to have_content(@item_1.name)
           expect(page).to have_content(@item_2.name)
           expect(page).to have_content(@item_3.name)
-          expect(page).to have_content(@item_1.status)
-          expect(page).to have_content(@item_2.status)
-          expect(page).to have_content(@item_3.status)
+          expect(page).to have_content(@item_1.status.capitalize)
+          expect(page).to have_content(@item_2.status.capitalize)
+          expect(page).to have_content(@item_3.status.capitalize)
           expect(page).to have_content(@item_1.unit_price)
           expect(page).to have_content(@item_2.unit_price)
           expect(page).to have_content(@item_3.unit_price)
@@ -59,7 +59,7 @@ RSpec.describe 'Admin invoices show page' do
       end
       it 'can pick a new status for the Invoice and see it updated on the Admin Invoice Show Page' do
         visit admin_invoice_path(@invoice_2)
-        
+
         select 'completed', from: 'Status'
         click_on('Update Invoice')
 
@@ -89,7 +89,10 @@ RSpec.describe 'Admin invoices show page' do
     @item_3 = create(:item)
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
-    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
     @invoice_2 = create(:invoice, status: :in_progress)
+    @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_1.id, quantity: 2, unit_price: 1.00)
+    @invoice_item_5 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, quantity: 2, unit_price: 5.00)
+    @invoice_item_6 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, quantity: 2, unit_price: 5.00)
   end
 end
