@@ -14,6 +14,7 @@ RSpec.describe 'Admin invoices show page' do
         expect(page).to have_content(@invoice_1.status_view_format)
         expect(page).to have_content(@invoice_1.created_at.strftime('%A, %B %d, %Y'))
       end
+
       it 'displays the total revenue of the invoice' do
         visit admin_invoice_path(@invoice_1)
 

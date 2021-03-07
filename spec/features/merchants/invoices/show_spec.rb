@@ -14,9 +14,9 @@ RSpec.describe 'As a merchant' do
     @invoice_1 = create(:invoice, customer_id: @customer_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer_2.id)
 
-    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending)
-    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged)
-    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending)
+    @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: :pending, quantity: 3, unit_price: 2.00)
+    @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_2.id, status: :packaged, quantity: 2, unit_price: 1.00)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: :pending, quantity: 1, unit_price: 1.50)
   end
 
   describe 'When I visit my merchants invoice show page(/merchants/merchant_id/invoices/invoice_id)' do
@@ -66,9 +66,7 @@ RSpec.describe 'As a merchant' do
     it 'I see the total revenue that will be generated from all of my items on the invoice' do
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
-      total_revenue = number_to_currency(@invoice_1.total_revenue)
-
-      expect(page).to have_content(total_revenue)
+      expect(page).to have_content("#{'%.2f' % @invoice_1.total_revenue}")
     end
 
     it 'for each item there is a status drop down' do
