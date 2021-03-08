@@ -25,10 +25,10 @@ class Invoice < ApplicationRecord
     invoice_items.pluck(Arel.sql("sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue")).first
   end
 
-  # def discount(invoice_item_id)
+  # def discount_data(invoice_item_id)
   #   invoice_items.joins(:discounts)
   #   .where('invoice_items.quantity >= discounts.threshold')
-  #   .select('invoice_items.*, (invoice_items.quantity * invoice_items.unit_price * discounts.percent) as discount, discounts.id as discount_id')
+  #   .select('discounts.percent as discount_percent')
   #   .where(id: invoice_item_id)
   #   .order('discounts.percent desc')
   # end
@@ -45,7 +45,7 @@ class Invoice < ApplicationRecord
   def discount_find
     invoice_items.joins(:discounts)
                  .where('invoice_items.quantity >= discounts.threshold')
-                 .select('invoice_items.*, (invoice_items.quantity * invoice_items.unit_price * discounts.percent) as discount, discounts.id as discount_id')
+                 .select('invoice_items.*, (invoice_items.quantity * invoice_items.unit_price * discounts.percent) as discount, discounts.id as discount_id, discounts.percent as discount_percent')
                  .order('discounts.percent desc')
   end
 
@@ -61,5 +61,10 @@ class Invoice < ApplicationRecord
   def discount_amount(invoice_item_id)
     return 0 if discount_find.where(id: invoice_item_id).empty?
     discount_find.where(id: invoice_item_id).first.discount
+  end
+
+  def discount_percentage(invoice_item_id)
+    return 0 if discount_find.where(id: invoice_item_id).empty?
+    discount_find.where(id: invoice_item_id).first.discount_percent
   end
 end

@@ -114,6 +114,16 @@ RSpec.describe Invoice do
         expect(@invoice_2.discount_amount(@ii_2.id)).to eq(1)
       end
     end
+
+    describe '#discount_percent(invoice_item_id)' do
+      it 'should return the amount that will be discounted for a given invoice item' do
+        expect(@invoice_1.discount_percentage(@ii_1.id)).to eq(0.1)
+        expect(@invoice_1.discount_percentage(@ii_3.id)).to eq(0.1)
+        expect(@invoice_1.discount_percentage(@ii_4.id)).to eq(0.15)
+        expect(@invoice_1.discount_percentage(@ii_5.id)).to eq(0)
+        expect(@invoice_2.discount_percentage(@ii_2.id)).to eq(0.1)
+      end
+    end
   end
 
   describe 'class methods' do

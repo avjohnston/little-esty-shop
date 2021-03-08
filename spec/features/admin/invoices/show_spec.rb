@@ -109,11 +109,24 @@ RSpec.describe 'Admin invoices show page' do
     end
   end
 
+  describe 'when an admin marks an invoice as completed' do
+    it 'each invoice item on that invoice has its discount stored' do
+      visit admin_invoice_path(@invoice_1)
+
+      select 'completed', from: 'Status'
+      click_on('Update Invoice')
+
+      expect(@invoice_1.invoice_items[0].discount_percent).to eq(0.1)
+      expect(@invoice_1.invoice_items[1].discount_percent).to eq(0.1)
+      expect(@invoice_1.invoice_items[2].discount_percent).to eq(0.1)
+    end
+  end
+
   def setup
     @customer_1 = create(:customer)
     @merchant = create(:merchant)
     @discount_1 = @merchant.discounts.create!(percent: 0.1, threshold: 2)
-    @invoice_1 = create(:invoice, customer_id: @customer_1.id)
+    @invoice_1 = create(:invoice, customer_id: @customer_1.id, status: :in_progress)
     @item_1 = create(:item, merchant_id: @merchant.id)
     @item_2 = create(:item, merchant_id: @merchant.id)
     @item_3 = create(:item, merchant_id: @merchant.id)
