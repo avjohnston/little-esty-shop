@@ -55,6 +55,12 @@ RSpec.describe Item do
         expect(@item7.best_day).to eq(@invoice_61.created_at.strftime('%m/%d/%Y'))
       end
     end
+
+    describe '#invoice_item(invoice_id)' do
+      it 'returns the id of an items invoice item' do
+        expect(@item.invoice_item(@invoice_1.id)).to eq(@invoice_item_1.id)
+      end
+    end
   end
 
   def sample_date
