@@ -4,6 +4,7 @@ RSpec.describe InvoiceItem do
   describe 'relationhips' do
     it { should belong_to :item }
     it { should belong_to :invoice }
+    it { should have_many(:discounts).through(:item) }
   end
 
   before :each do
