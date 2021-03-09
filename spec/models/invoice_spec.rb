@@ -82,7 +82,7 @@ RSpec.describe Invoice do
 
     describe '#discount_find' do
       it 'finds the correct discount for an invoices invoice items' do
-        expect(@invoice_1.discount_find).to eq([@ii_4, @ii_1, @ii_4, @ii_3])
+        expect(@invoice_1.discount_find).to eq([@ii_4, @ii_1, @ii_3, @ii_4])
         expect(@invoice_2.discount_find).to eq([@ii_2])
         expect(@invoice_1.discount_find.first.discount_id).to eq(@discount_2.id)
         expect(@invoice_1.discount_find[1].discount_id).to eq(@discount_1.id)

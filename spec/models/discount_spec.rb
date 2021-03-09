@@ -13,9 +13,9 @@ RSpec.describe Discount, type: :model do
 
   describe 'instance methods' do
     it '#no_invoice_items_pending?' do
-      expect(@discount_1.no_invoice_items_pending?).to eq(true)
-      expect(@discount_2.no_invoice_items_pending?).to eq(false)
-      expect(@discount_3.no_invoice_items_pending?).to eq(true)
+      expect(@discount_1.invoice_items_pending?).to eq('edit_delete')
+      expect(@discount_2.invoice_items_pending?).to eq('empty')
+      expect(@discount_3.invoice_items_pending?).to eq('edit_delete')
     end
   end
 

@@ -22,6 +22,7 @@ RSpec.describe 'merchant discount show page', type: :feature do
 
     visit merchant_discount_path(@merchant, @discount_2)
     expect(page).to_not have_button("Edit Discount")
+    expect(page).to have_content("This discount can't be edited or deleted because it has pending invoice items")
   end
 
   def set_up

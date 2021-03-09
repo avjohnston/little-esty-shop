@@ -100,6 +100,7 @@ RSpec.describe 'merchant discounts index page', type: :feature do
 
     within "#discount-#{@discount_2.id}" do
       expect(page).to_not have_button("Delete Discount")
+      expect(page).to have_content("This discount can't be edited or deleted because it has pending invoice items")
     end
 
     within "#discount-#{@discount_1.id}" do

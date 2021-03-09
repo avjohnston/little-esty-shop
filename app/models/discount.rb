@@ -11,7 +11,9 @@ class Discount < ApplicationRecord
     self.status = 0
   end
 
-  def no_invoice_items_pending?
-    invoice_items.where(status: :pending).where('quantity >= ?', self.threshold).empty?
+  def invoice_items_pending?
+    return "edit_delete" if invoice_items.where(status: :pending).where('quantity >= ?', self.threshold).empty?
+    "empty"
   end
+
 end
