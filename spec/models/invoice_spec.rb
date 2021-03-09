@@ -6,7 +6,6 @@ RSpec.describe Invoice do
     it { should have_many(:items).through(:invoice_items) }
     it { should have_many :transactions }
     it { should belong_to :customer }
-    it { should have_many :discounts }
   end
 
   before :each do
@@ -38,7 +37,7 @@ RSpec.describe Invoice do
     @invoice_22 = create(:invoice, customer_id: @customer_2.id)
     @transaction_21 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_21.id)
     @transaction_22 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_22.id)
-    @ii_21 = create(:invoice_item, invoice_id: @invoice_21.id, status: InvoiceItem.statuses[:packaged]
+    @ii_21 = create(:invoice_item, invoice_id: @invoice_21.id, status: InvoiceItem.statuses[:packaged])
     @invoice_31 = create(:invoice, customer_id: @customer_3.id)
     @invoice_32 = create(:invoice, customer_id: @customer_3.id)
     @transaction_31 = create(:transaction, result: Transaction.results[:success], invoice_id: @invoice_31.id)
@@ -83,6 +82,7 @@ RSpec.describe Invoice do
     describe '#discount_find' do
       it 'finds the correct discount for an invoices invoice items' do
         expect(@invoice_1.discount_find.uniq).to eq([@ii_4, @ii_1, @ii_3])
+        expect(@invoice_1.discount_find.first.discount_percent).to eq(0.15)
         expect(@invoice_2.discount_find).to eq([@ii_2])
         expect(@invoice_1.discount_find.first.discount_id).to eq(@discount_2.id)
         expect(@invoice_1.discount_find[1].discount_id).to eq(@discount_1.id)
