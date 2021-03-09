@@ -1,7 +1,11 @@
 <h1><%= @merchant.name %>'s Discounts</h1>
 
 <h4>Upcoming Holidays:</h4>
-
+<% @next_holidays.each do |holiday| %>
+  <section id="holiday-<%= holiday.date %>">
+    * <%= holiday.name %> - <%= holiday.date %><br>
+  </section>
+<% end %>
 
 <h2>Discounts:</h2>
 <% @discounts.each do |discount| %>

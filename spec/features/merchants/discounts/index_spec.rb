@@ -47,15 +47,20 @@ RSpec.describe 'merchant discounts index page', type: :feature do
 
     expect(page).to have_content("Upcoming Holidays")
 
-    # within "#holiday-#{@holiday_1.date}" do
-    #   expect(page).to have_content("#{@holiday_1.name}")
-    #   expect(page).to have_content("#{@holiday_1.date}")
-    # end
-    #
-    # within "#holiday-#{@holiday_2.date}" do
-    #   expect(page).to have_content("#{@holiday_2.name}")
-    #   expect(page).to have_content("#{@holiday_2.date}")
-    # end
+    within "#holiday-#{@holiday_1.date}" do
+      expect(page).to have_content("#{@holiday_1.name}")
+      expect(page).to have_content("#{@holiday_1.date}")
+    end
+
+    within "#holiday-#{@holiday_2.date}" do
+      expect(page).to have_content("#{@holiday_2.name}")
+      expect(page).to have_content("#{@holiday_2.date}")
+    end
+
+    within "#holiday-#{@holiday_3.date}" do
+      expect(page).to have_content("#{@holiday_3.name}")
+      expect(page).to have_content("#{@holiday_3.date}")
+    end
   end
 
   it 'merchant discount index has a link to create a new merchant discount' do
@@ -111,6 +116,10 @@ RSpec.describe 'merchant discounts index page', type: :feature do
     @discount_1 = @merchant.discounts.create!(percent: 0.20, threshold: 10)
     @discount_2 = @merchant.discounts.create!(percent: 0.10, threshold: 2)
     @discount_3 = @merchant.discounts.create!(percent: 0.15, threshold: 12)
+
+    @holiday_1 = HolidayService.holiday_objects[0]
+    @holiday_2 = HolidayService.holiday_objects[1]
+    @holiday_3 = HolidayService.holiday_objects[2]
 
     @customer_1 = create(:customer)
     @item_1 = create(:item, merchant_id: @merchant.id)

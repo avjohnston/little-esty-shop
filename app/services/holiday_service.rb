@@ -1,5 +1,4 @@
 class HolidayService
-
   def self.get_holidays
     response = Faraday.get("https://date.nager.at/Api/v2/NextPublicHolidays/US")
     parsed = JSON.parse(response.body, symbolize_names: true)
