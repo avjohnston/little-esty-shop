@@ -82,7 +82,7 @@ RSpec.describe Invoice do
 
     describe '#discount_find' do
       it 'finds the correct discount for an invoices invoice items' do
-        expect(@invoice_1.discount_find).to eq([@ii_4, @ii_1, @ii_3, @ii_4])
+        expect(@invoice_1.discount_find).to eq([@ii_4, @ii_1, @ii_4, @ii_3])
         expect(@invoice_2.discount_find).to eq([@ii_2])
         expect(@invoice_1.discount_find.first.discount_id).to eq(@discount_2.id)
         expect(@invoice_1.discount_find[1].discount_id).to eq(@discount_1.id)
@@ -123,6 +123,16 @@ RSpec.describe Invoice do
         expect(@invoice_1.discount_percentage(@ii_5.id)).to eq(0)
         expect(@invoice_2.discount_percentage(@ii_2.id)).to eq(0.1)
       end
+    end
+  end
+
+  describe '#gets_discount?(invoice_item_id)' do
+    it 'should return the partial file that will be rendered for a given invoice item' do
+      expect(@invoice_1.gets_discount?(@ii_1.id)).to eq('discount')
+      expect(@invoice_1.gets_discount?(@ii_3.id)).to eq('discount')
+      expect(@invoice_1.gets_discount?(@ii_4.id)).to eq('discount')
+      expect(@invoice_1.gets_discount?(@ii_5.id)).to eq('no_discount')
+      expect(@invoice_2.gets_discount?(@ii_2.id)).to eq('discount')
     end
   end
 

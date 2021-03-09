@@ -67,4 +67,9 @@ class Invoice < ApplicationRecord
     return 0 if discount_find.where(id: invoice_item_id).empty?
     discount_find.where(id: invoice_item_id).first.discount_percent
   end
+
+  def gets_discount?(invoice_item_id)
+    return 'no_discount' if discount_percentage(invoice_item_id) == 0
+    'discount'
+  end
 end
