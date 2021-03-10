@@ -14,9 +14,7 @@ class Admin::InvoicesController < ApplicationController
     @invoice = Invoice.find(params[:id])
     @invoice.update(status: params[:invoice][:status])
     if @invoice.status == 'completed'
-      @invoice.invoice_items.map do |ii|
-        ii.update(discount_percent: @invoice.discount_percentage(ii.id))
-      end
+      @invoice.invoice_item_update
     end
 
     redirect_to admin_invoice_path(@invoice)

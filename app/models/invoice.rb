@@ -32,7 +32,7 @@ class Invoice < ApplicationRecord
   #   .where(id: invoice_item_id)
   #   .order('discounts.percent desc')
   # end
-
+  #
   #
   # def discount_show
   #   discounts = invoice_items.map do |ii|
@@ -71,5 +71,11 @@ class Invoice < ApplicationRecord
   def gets_discount?(invoice_item_id)
     return 'no_discount' if discount_percentage(invoice_item_id) == 0
     'discount'
+  end
+
+  def invoice_item_update
+    invoice_items.map do |ii|
+      ii.update(discount_percent: discount_percentage(ii.id))
+    end
   end
 end
